@@ -1,9 +1,13 @@
 import userRepositry from "../repositery/userRepositery.js";
+import EctDct from '../config/managePassword.js';
+
 const { createUser, getUsers, getUserById, updateUser, deleteUser } = userRepositry;
+const {encrypt} = EctDct;
 
 class UserController {
   async createUser(req, res) {
     try {
+      req.body.password = await encrypt(req.body.password,process.env.KEY);
       const user = await createUser(req.body);
       res.status(201).json(user);
     } catch (error) {

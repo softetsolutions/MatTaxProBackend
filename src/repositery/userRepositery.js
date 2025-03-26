@@ -1,6 +1,6 @@
 import { pool } from "../config/database.js";
 
-class UserService {
+class userRepositery {
   async createUser(body) {
     // const fields = Object.keys(body);
     // const values = Object.values(body);
@@ -15,6 +15,10 @@ class UserService {
 
   async getUserById(id) {
     return (await pool.query("SELECT * FROM users WHERE id = $1", [id])).rows[0];
+  }
+
+  async getUserEmail(email) {
+    return (await pool.query("SELECT * FROM users WHERE email = $1", [email])).rows[0];
   }
 
   async updateUser(id, body) {
@@ -33,4 +37,4 @@ class UserService {
   
 }
 
-export default new UserService();
+export default new userRepositery();

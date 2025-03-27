@@ -34,6 +34,21 @@ class userRepositery {
   async deleteUser(id) {
     return (await pool.query(`DELETE FROM users WHERE id = ${id} RETURNING *`))
   }
+
+  async findOrCreateUser(userData) {
+    const existingUser = await this.getUserByEmail(userData.email);
+    if (existingUser) {
+      return existingUser;
+    }
+
+    return await this.createUser({
+      fname: userData.fname || "",
+      lname: userData.lname || "",
+      email: userData.email,
+      role: userData.role || "user",
+      provider: userData.provider || "google",
+    });
+  }
   
 }
 

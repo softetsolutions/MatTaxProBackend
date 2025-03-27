@@ -31,6 +31,20 @@ class userRepositery {
     return (await pool.query(query, Object.values(body))).rows[0];
   }
 
+  async updateUserByToken(token, body) {
+    const fields = Object.keys(body);
+    const values = Object.values(body);
+
+    if (!fields.length) {
+        throw new Error("No fields to update");
+    }
+
+    const set = fields.map((field, i) => `${field} = $${i + 1}`).join(", ");
+    const query = `UPDATE users SET ${set} WHERE token = $${fields.length + 1} RETURNING *`;
+
+    return (await pool.query(query, [...values, token])).rows[0];
+}
+
   async deleteUser(id) {
     return (await pool.query(`DELETE FROM users WHERE id = ${id} RETURNING *`))
   }

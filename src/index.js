@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import APIrouter from "./routes/API-gatway.js";
 import entityManager from "./modal/entityManager.js";
 import { connectDB } from "./config/database.js";
+import google from './Auth/google-auth.js'
 dotenv.config();
 
 

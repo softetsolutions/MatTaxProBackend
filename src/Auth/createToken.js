@@ -13,8 +13,6 @@ import EctDct from '../config/managePassword.js';
         return res.status(404).json({ message: "User not found" });
       }
 
-      console.log(user, "req user");
-
       const isPasswordValid = await EctDct.decrypt(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid credentials" });
@@ -22,18 +20,14 @@ import EctDct from '../config/managePassword.js';
 
       // Generate new token
       const authToken = jsonwebtoken.sign(
-        { email: user.email, role: user.userRole },
+        { id: user.id, role: user.userRole },
         process.env.JWT_KEY,
         {
-          expiresIn: process.env.JWT_TIME,
+          expiresIn: `1h`,
         }
       );
-
-      // Update token in database
-    //   user.authToken = authToken;
-    //   await user.save();
-    //   req.user = user;
-
+      userRepositery.updateUser(user.id, { token: authToken });
+      req.user = user
       // Set token in cookies
       res.cookie("authToken", authToken, {
         httpOnly: true,
